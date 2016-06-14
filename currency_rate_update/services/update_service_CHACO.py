@@ -25,8 +25,6 @@ from .currency_getter_interface import Currency_getter_interface
 
 from lxml import html
 import requests
-import logging
-_logger = logging.getLogger(__name__)
 
 class CHACO_getter(Currency_getter_interface):
     """Implementation of Currency_getter_factory interface
@@ -55,10 +53,8 @@ class CHACO_getter(Currency_getter_interface):
             }
         if main_currency in currency_array:
             currency_array.remove(main_currency)
-        _logger.info('maincurrency: %s', main_currency)
         for curr in currency_array:
             self.validate_cur(curr)
-            _logger.info('valor %s (moneda: %s)', val[curr], curr)
             if val[curr]:
                 self.updated_currency[curr] = val[curr]
             else:
