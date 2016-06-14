@@ -122,6 +122,8 @@ PL_NBP_supported_currency_array = [
     "LTL", "MXN", "MYR", "NOK", "NZD", "PHP", "PLN", "RON", "RUB", "SEK",
     "SGD", "THB", "TRY", "UAH", "USD", "XDR", "ZAR"]
 
+CHACO_supported_currency_array = ["PYG", "USD", "BRL", "ARS", "EUR"]
+
 supported_currecies = {
     'YAHOO_getter': YAHOO_supported_currency_array,
     'ECB_getter': ECB_supported_currency_array,
@@ -130,6 +132,7 @@ supported_currecies = {
     'CH_ADMIN_getter': CH_ADMIN_supported_currency_array,
     'MX_BdM_getter': MX_BdM_supported_currency_array,
     'PL_NBP_getter': PL_NBP_supported_currency_array,
+    'CHACO_getter': CHACO_supported_currency_array
     }
 
 
@@ -194,7 +197,9 @@ class Currency_rate_update_service(models.Model):
          #  (Thailand, Malaysia, Mexico...)
          ('CA_BOC_getter', 'Bank of Canada - noon rates'),
          # Added for romanian rates
-         ('RO_BNR_getter', 'National Bank of Romania')
+         ('RO_BNR_getter', 'National Bank of Romania'),
+         # Added for Paraguayan rates
+         ('CHACO_getter', 'Cambios Chaco'),
          ],
         string="Webservice to use",
         required=True)
@@ -327,6 +332,7 @@ class Currency_rate_update_service(models.Model):
     def run_currency_update(self):
         # Update currency at the given frequence
         services = self.search([('next_run', '<=', fields.Date.today())])
+        _logger.info('Services---------------------: %s'%services)
         services.with_context(cron=True).refresh_currency()
 
     @api.model
